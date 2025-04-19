@@ -3,7 +3,7 @@ import CloudBall from '../../assets/img/abstract/cloud-ball.png';
 import Quadrilateral from '../../assets/img/abstract/quadrilateral.png';
 import HardSharpDonut from '../../assets/img/abstract/hald-sharp-donut.png';
 import BendyRectangle from '../../assets/img/abstract/bendy-rectangle.png';
-import Infinity from '../../assets/img/abstract/infinity.png';
+import InfinityShape from '../../assets/img/abstract/infinity.png';
 import Octahedron from '../../assets/img/abstract/octahedron.png';
 import Triangle from '../../assets/img/abstract/triangle.png';
 import SquiglyGlobe from '../../assets/img/abstract/squigly-globe.png';
@@ -105,7 +105,7 @@ const data: {
 	},
 	{
 		id: 6,
-		image: Infinity,
+		image: InfinityShape,
 		name: 'Bendy Rectangle',
 		category: '3D Shapes',
 		series: [

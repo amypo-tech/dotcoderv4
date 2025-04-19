@@ -2,7 +2,6 @@ import globals from 'globals';
 import pluginJs from '@eslint/js';
 import tseslint from 'typescript-eslint';
 import pluginReact from 'eslint-plugin-react';
-// import pluginReactNext from '@next/eslint-plugin-next';
 import reactHooks from 'eslint-plugin-react-hooks';
 import prettier from 'eslint-plugin-prettier';
 import pluginImport from 'eslint-plugin-import';
