@@ -1,4 +1,5 @@
 const { i18n } = require('./next-i18next.config');
+const sass = require('sass');
 const withImages = require('next-images');
 const withInterceptStdout = require('next-intercept-stdout');
 
@@ -21,7 +22,15 @@ const nextConfig = withInterceptStdout(
 		i18n,
 		webpack(config, options) {
 			return config
-		}
+		},
+		sassOptions: {
+			quietDeps: true,
+			silenceDeprecations: ['import', 'global-builtin'],
+			logger: sass.Logger.silent,
+		},
+		webpack(config, options) {
+			return config;
+		},
 	}),
 	(log) => (hideWarn.some((warn) => log.includes(warn)) ? '' : log),
 );
