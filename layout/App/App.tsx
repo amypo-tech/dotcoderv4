@@ -56,6 +56,7 @@ const App: FC<IAppProps> = ({ children }) => {
 	 */
 	const { fullScreenStatus, setFullScreenStatus } = useContext(ThemeContext);
 	const ref = useRef(null);
+	// @ts-ignore
 	useFullscreen(ref, fullScreenStatus, {
 		onClose: () => setFullScreenStatus(false),
 	});

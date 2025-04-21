@@ -6,6 +6,7 @@ export default function useEventListener(
 	element = typeof window !== 'undefined' && window,
 ) {
 	// Create a ref that stores handler
+	// @ts-ignore
 	const savedHandler = useRef();
 	// Update ref.current value if handler changes.
 	// This allows our effect below to always get latest handler ...

@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from 'react';
+import React, { RefObject, useEffect, useRef, useState } from 'react';
 import { useHoverDirty } from 'react-use';
 import classNames from 'classnames';
 import Card, {
@@ -33,7 +33,7 @@ const CommonTransActions = () => {
 	const { themeStatus, darkModeStatus } = useDarkMode();
 
 	const ref = useRef<HTMLAnchorElement>(null);
-	const isHovering = useHoverDirty(ref);
+	const isHovering = useHoverDirty(ref as RefObject<Element>);
 	const [isLoading, setIsLoading] = useState(false);
 	const [demoStatus, setDemoStatus] = useState<TTransferActionStatus>('Processing');
 

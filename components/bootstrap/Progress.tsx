@@ -99,6 +99,7 @@ const Progress = forwardRef<HTMLDivElement, IProgressProps>(
 				{...props}>
 				{children
 					? Children.map(children, (child) =>
+							// @ts-ignore
 							cloneElement(child as ReactElement, { isOnlyBar: true }),
 						)
 					: ONLY_BAR}

@@ -2,6 +2,7 @@ import React, {
 	forwardRef,
 	HTMLAttributeAnchorTarget,
 	HTMLAttributes,
+	JSX,
 	ReactElement,
 	ReactNode,
 } from 'react';

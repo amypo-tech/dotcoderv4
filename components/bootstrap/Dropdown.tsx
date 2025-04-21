@@ -258,9 +258,11 @@ export const DropdownItem = forwardRef<HTMLLIElement, IDropdownItemProps>(
 );
 DropdownItem.displayName = 'DropdownItem';
 
+type DropdownChild = ReactElement<IDropdownToggleProps> | ReactElement<IDropdownMenuProps>;
+
 export interface IDropdownProps {
 	tag?: ElementType;
-	children: ReactElement<IDropdownToggleProps>[] | ReactElement<IDropdownMenuProps>[];
+	children: DropdownChild | DropdownChild[];
 	isOpen?: boolean | null;
 	setIsOpen?(...args: unknown[]): unknown;
 	direction?: TDropdownDirection;
@@ -294,7 +296,6 @@ const Dropdown: FC<IDropdownProps> = ({
 
 	return (
 		<Manager>
-			{/* @ts-ignore */}
 			<Tag
 				ref={dropdownRef}
 				className={classNames(
@@ -309,6 +310,7 @@ const Dropdown: FC<IDropdownProps> = ({
 					// @ts-ignore
 					['DropdownMenu', 'DropdownToggle'].includes(child.type.displayName)
 						? cloneElement(child, {
+								// @ts-ignore
 								isOpen: isOpen !== null && !!setIsOpen ? isOpen : state,
 								setIsOpen: isOpen !== null && !!setIsOpen ? setIsOpen : setState,
 								direction,

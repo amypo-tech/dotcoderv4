@@ -1,11 +1,17 @@
-import React, { cloneElement, FC, HTMLAttributes, ReactElement, ReactNode } from 'react';
+import React, { cloneElement, FC, HTMLAttributes, ReactNode } from 'react';
 import classNames from 'classnames';
 import TagWrapper from '../../TagWrapper';
 import Label from './Label';
 import FormText from './FormText';
 
+interface ChildProps {
+	id?: string;
+	size?: string;
+	placeholder?: string;
+	'aria-describedby'?: string | null;
+}
 interface IFormGroupProps extends HTMLAttributes<HTMLElement> {
-	children: ReactElement | ReactElement[];
+	children: React.ReactElement<ChildProps> | React.ReactElement<ChildProps>[];
 	className?: string;
 	labelClassName?: string;
 	childWrapperClassName?: string;

@@ -151,6 +151,7 @@ const Wizard: FC<IWizardProps> = ({
 				<div className='wizard'>
 					{Children.map(children, (child, index) =>
 						cloneElement(child as unknown as ReactElement, {
+							// @ts-ignore
 							className: index !== activeItemIndex ? 'd-none' : '',
 							'aria-hidden': index !== activeItemIndex,
 						}),

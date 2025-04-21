@@ -66,6 +66,7 @@ const LineRealtime = () => {
 				type: 'line',
 				animations: {
 					enabled: true,
+					// @ts-ignore
 					easing: 'linear',
 					dynamicAnimation: {
 						speed: 1000,

@@ -88,6 +88,7 @@ const LineWithAnnotations = () => {
 							size: 8,
 							fillColor: '#fff',
 							strokeColor: 'red',
+							// @ts-ignore
 							radius: 2,
 							cssClass: 'apexcharts-custom-class',
 						},

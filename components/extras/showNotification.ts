@@ -1,4 +1,5 @@
 import { Store } from 'react-notifications-component';
+import { JSX } from 'react';
 
 const showNotification = (
 	title: string | JSX.Element,
