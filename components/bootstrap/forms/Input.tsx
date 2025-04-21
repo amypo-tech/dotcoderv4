@@ -1,13 +1,12 @@
 import React, { forwardRef, HTMLAttributes } from 'react';
 import { NumericFormat } from 'react-number-format';
-import InputMask from 'react-input-mask';
 import classNames from 'classnames';
 import Portal from '../../../layout/Portal/Portal';
 import Validation from './Validation';
 import { TInputTypes } from '../../../type/input-type';
 
-export interface IInputProps extends HTMLAttributes<HTMLInputElement>, Partial<InputMask> {
-	component?: 'NumberFormat' | 'InputMask';
+export interface IInputProps extends HTMLAttributes<HTMLInputElement> {
+	component?: 'NumberFormat';
 	type?: TInputTypes;
 	id?: string;
 	name?: string;
@@ -146,7 +145,6 @@ const Input = forwardRef<HTMLInputElement, IInputProps>(
 			onInvalid: () => onInvalid,
 			onSelect: () => onSelect,
 		};
-		const MASK_PROPS = { mask };
 
 		const LIST = list && (
 			<Portal>
@@ -172,16 +170,6 @@ const Input = forwardRef<HTMLInputElement, IInputProps>(
 				<>
 					{/* eslint-disable-next-line react/jsx-props-no-spreading */} {/* @ts-ignore */}
 					<NumericFormat ref={ref} {...PROPS} {...NUMBER_FORMAT_PROPS} />
-					{LIST}
-					{VALIDATION}
-				</>
-			);
-		}
-		if (component === 'InputMask' || mask) {
-			return (
-				<>
-					{/* eslint-disable-next-line react/jsx-props-no-spreading */} {/* @ts-ignore */}
-					<InputMask ref={ref} {...PROPS} {...MASK_PROPS} />
 					{LIST}
 					{VALIDATION}
 				</>

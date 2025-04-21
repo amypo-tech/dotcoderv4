@@ -486,7 +486,6 @@ const Index: NextPage = () => {
 													type='tel'
 													placeholder='+1 (999) 999-9999'
 													autoComplete='tel'
-													mask='+1 (999) 999-9999'
 													onChange={formik.handleChange}
 													value={formik.values.formPhone}
 												/>
