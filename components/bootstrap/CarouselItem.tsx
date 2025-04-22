@@ -1,135 +1,113 @@
-import React, { Component, ReactNode } from 'react';
+import React, { useRef, useState, useCallback, JSX, ReactNode } from 'react';
 import classNames from 'classnames';
 import { Transition } from 'react-transition-group';
 import { TransitionStatuses, TransitionTimeouts } from './utils';
 
 type TCarouselItemProps = {
-	tag?: string;
+	tag?: keyof JSX.IntrinsicElements;
 	in?: boolean;
 	children?: ReactNode;
 	slide?: boolean;
 	className?: string;
 	isFluid?: boolean;
-	onEnter(...args: unknown[]): unknown;
-	onEntering(...args: unknown[]): unknown;
-	onExit(...args: unknown[]): unknown;
-	onExiting(...args: unknown[]): unknown;
-	onExited(...args: unknown[]): unknown;
+	direction?: 'start' | 'end';
+	onEnter?: (node: HTMLElement, isAppearing: boolean) => void;
+	onEntering?: (node: HTMLElement, isAppearing: boolean) => void;
+	onExit?: (node: HTMLElement) => void;
+	onExiting?: (node: HTMLElement) => void;
+	onExited?: (node: HTMLElement) => void;
 };
-type TCarouselItemState = {
-	startAnimation: boolean;
-};
-class CarouselItem extends Component<TCarouselItemProps, TCarouselItemState> {
-	constructor(props: TCarouselItemProps | Readonly<TCarouselItemProps>) {
-		super(props);
 
-		this.state = {
-			startAnimation: false,
-		};
+const CarouselItem: React.FC<TCarouselItemProps> = ({
+	in: inProp,
+	children,
+	slide = true,
+	className,
+	isFluid = false,
+	direction = 'end',
+	onEnter,
+	onEntering,
+	onExit,
+	onExiting,
+	onExited,
+}) => {
+	const nodeRef = useRef<HTMLDivElement>(null);
+	const [startAnimation, setStartAnimation] = useState(false);
 
-		this.onEnter = this.onEnter.bind(this);
-		this.onEntering = this.onEntering.bind(this);
-		this.onExit = this.onExit.bind(this);
-		this.onExiting = this.onExiting.bind(this);
-		this.onExited = this.onExited.bind(this);
-	}
+	const handleEnter = useCallback(() => {
+		setStartAnimation(false);
+		if (nodeRef.current) onEnter?.(nodeRef.current, false);
+	}, [onEnter]);
 
-	onEnter(node: any, isAppearing: any) {
-		this.setState({ startAnimation: false });
+	const handleEntering = useCallback(() => {
+		if (nodeRef.current) {
+			void nodeRef.current.offsetHeight; // trigger reflow
+			setStartAnimation(true);
+			onEntering?.(nodeRef.current, false);
+		}
+	}, [onEntering]);
 
-		this.props.onEnter(node, isAppearing);
-	}
+	const handleExit = useCallback(() => {
+		setStartAnimation(false);
+		if (nodeRef.current) onExit?.(nodeRef.current);
+	}, [onExit]);
 
-	onEntering(node: { offsetHeight: any }, isAppearing: any) {
-		// getting this variable triggers a reflow
-		const { offsetHeight } = node;
-		this.setState({ startAnimation: true });
+	const handleExiting = useCallback(() => {
+		if (nodeRef.current) {
+			setStartAnimation(true);
+			nodeRef.current.dispatchEvent(new CustomEvent('slide.bs.carousel'));
+			onExiting?.(nodeRef.current);
+		}
+	}, [onExiting]);
 
-		this.props.onEntering(node, isAppearing);
-		return offsetHeight;
-	}
+	const handleExited = useCallback(() => {
+		if (nodeRef.current) {
+			nodeRef.current.dispatchEvent(new CustomEvent('slid.bs.carousel'));
+			onExited?.(nodeRef.current);
+		}
+	}, [onExited]);
 
-	onExit(node: any) {
-		this.setState({ startAnimation: false });
+	return (
+		<Transition
+			in={inProp}
+			timeout={TransitionTimeouts.Carousel}
+			nodeRef={nodeRef}
+			enter={slide}
+			exit={slide}
+			onEnter={handleEnter}
+			onEntering={handleEntering}
+			onExit={handleExit}
+			onExiting={handleExiting}
+			onExited={handleExited}>
+			{(status) => {
+				const isActive =
+					status === TransitionStatuses.ENTERED || status === TransitionStatuses.EXITING;
 
-		this.props.onExit(node);
-	}
+				const directionClassName =
+					(status === TransitionStatuses.ENTERING ||
+						status === TransitionStatuses.EXITING) &&
+					startAnimation &&
+					(direction === 'end' ? 'carousel-item-start' : 'carousel-item-end');
+				const orderClassName =
+					status === TransitionStatuses.ENTERING &&
+					(direction === 'end' ? 'carousel-item-next' : 'carousel-item-prev');
+				const itemClasses = classNames(
+					className,
+					'carousel-item',
+					isActive && 'active',
+					directionClassName,
+					orderClassName,
+					{ 'h-100': isFluid },
+				);
 
-	onExiting(node: { dispatchEvent: (arg0: CustomEvent<unknown>) => void }) {
-		this.setState({ startAnimation: true });
-		node.dispatchEvent(new CustomEvent('slide.bs.carousel'));
-
-		this.props.onExiting(node);
-	}
-
-	onExited(node: { dispatchEvent: (arg0: CustomEvent<unknown>) => void }) {
-		node.dispatchEvent(new CustomEvent('slid.bs.carousel'));
-
-		this.props.onExited(node);
-	}
-
-	render() {
-		const {
-			in: isIn,
-			children,
-			slide,
-			tag: Tag,
-			className,
-			isFluid,
-			...transitionProps
-		} = this.props;
-
-		return (
-			// @ts-ignore
-			<Transition
-				// eslint-disable-next-line react/jsx-props-no-spreading
-				{...transitionProps}
-				enter={slide}
-				exit={slide}
-				in={isIn}
-				onEnter={this.onEnter}
-				onEntering={this.onEntering}
-				onExit={this.onExit}
-				onExiting={this.onExiting}
-				onExited={this.onExited}>
-				{(status) => {
-					// @ts-ignore
-					const { direction } = this.context;
-					const isActive =
-						status === TransitionStatuses.ENTERED ||
-						status === TransitionStatuses.EXITING;
-					const directionClassName =
-						(status === TransitionStatuses.ENTERING ||
-							status === TransitionStatuses.EXITING) &&
-						this.state.startAnimation &&
-						(direction === 'end' ? 'carousel-item-start' : 'carousel-item-end');
-					const orderClassName =
-						status === TransitionStatuses.ENTERING &&
-						(direction === 'end' ? 'carousel-item-next' : 'carousel-item-prev');
-					const itemClasses = classNames(
-						className,
-						'carousel-item',
-						isActive && 'active',
-						directionClassName,
-						orderClassName,
-						{ 'h-100': isFluid },
-					);
-
-					// @ts-ignore
-					return <Tag className={itemClasses}>{children}</Tag>;
-				}}
-			</Transition>
-		);
-	}
-}
-// @ts-ignore
-CarouselItem.defaultProps = {
-	// @ts-ignore
-	...Transition.defaultProps,
-	tag: 'div',
-	timeout: TransitionTimeouts.Carousel,
-	slide: true,
-	isFluid: false,
+				return (
+					<div ref={nodeRef} className={itemClasses}>
+						{children}
+					</div>
+				);
+			}}
+		</Transition>
+	);
 };
 
 export default CarouselItem;
